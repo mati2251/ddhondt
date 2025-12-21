@@ -1,0 +1,353 @@
+{
+  "election_id": "os_sejm2025",
+  "districts": [
+    {
+      "district_id": "okr1",
+      "name": "Techopolis",
+      "mandates": 10,
+      "parties": [
+        {
+          "party_id": 1,
+          "party_name": "Linux Party",
+          "candidates": [
+            {"candidate_id": 1, "name": "Ubuntu Studio"},
+            {"candidate_id": 2, "name": "Kernel Upgrade"},
+            {"candidate_id": 3, "name": "Snapcraft"},
+            {"candidate_id": 4, "name": "Systemd"},
+            {"candidate_id": 5, "name": "Gnome Shell"},
+            {"candidate_id": 6, "name": "KDE Plasma"},
+            {"candidate_id": 7, "name": "Bash Scripting"},
+            {"candidate_id": 8, "name": "APT Package"},
+            {"candidate_id": 9, "name": "SELinux"},
+            {"candidate_id": 10, "name": "Docker Linux"}
+          ]
+        },
+        {
+          "party_id": 2,
+          "party_name": "Windows Party",
+          "candidates": [
+            {"candidate_id": 1, "name": "PowerShell"},
+            {"candidate_id": 2, "name": "Active Directory"},
+            {"candidate_id": 3, "name": "Win32 API"},
+            {"candidate_id": 4, "name": "DirectX"},
+            {"candidate_id": 5, "name": "WPF"},
+            {"candidate_id": 6, "name": "Hyper-V"},
+            {"candidate_id": 7, "name": "Registry Tweaks"},
+            {"candidate_id": 8, "name": "Windows Defender"},
+            {"candidate_id": 9, "name": "IIS"},
+            {"candidate_id": 10, "name": "Windows Sandbox"}
+          ]
+        },
+        {
+          "party_id": 3,
+          "party_name": "MacOS Alliance",
+          "candidates": [
+            {"candidate_id": 1, "name": "Time Machine"},
+            {"candidate_id": 2, "name": "Spotlight Search"},
+            {"candidate_id": 3, "name": "Handoff"},
+            {"candidate_id": 4, "name": "AppleScript"},
+            {"candidate_id": 5, "name": "Finder Tags"},
+            {"candidate_id": 6, "name": "Mission Control"},
+            {"candidate_id": 7, "name": "Siri Shortcuts"},
+            {"candidate_id": 8, "name": "iCloud Drive"},
+            {"candidate_id": 9, "name": "Launchpad"},
+            {"candidate_id": 10, "name": "Automator"}
+          ]
+        },
+        {
+          "party_id": 4,
+          "party_name": "BSD Front",
+          "candidates": [
+            {"candidate_id": 1, "name": "Jails"},
+            {"candidate_id": 2, "name": "Ports Collection"},
+            {"candidate_id": 3, "name": "PF Firewall"},
+            {"candidate_id": 4, "name": "ZFS"},
+            {"candidate_id": 5, "name": "RC Scripts"},
+            {"candidate_id": 6, "name": "pkgng"},
+            {"candidate_id": 7, "name": "Sysctl Tuning"},
+            {"candidate_id": 8, "name": "Mountd"},
+            {"candidate_id": 9, "name": "Cron Jobs"},
+            {"candidate_id": 10, "name": "Sockets API"}
+          ]
+        },
+        {
+          "party_id": 5,
+          "party_name": "Unix Coalition",
+          "candidates": [
+            {"candidate_id": 1, "name": "SysV Init"},
+            {"candidate_id": 2, "name": "Sendmail"},
+            {"candidate_id": 3, "name": "Make"},
+            {"candidate_id": 4, "name": "awk"},
+            {"candidate_id": 5, "name": "grep"},
+            {"candidate_id": 6, "name": "sed"},
+            {"candidate_id": 7, "name": "cron"},
+            {"candidate_id": 8, "name": "tar"},
+            {"candidate_id": 9, "name": "vi"},
+            {"candidate_id": 10, "name": "sh"}
+          ]
+        }
+      ]
+    },
+    {
+      "district_id": "okr2",
+      "name": "Geekville",
+      "mandates": 8,
+      "parties": [
+        {
+          "party_id": 1,
+          "party_name": "Linux Party",
+          "candidates": [
+            {"candidate_id": 1, "name": "Wayland"},
+            {"candidate_id": 2, "name": "Xorg"},
+            {"candidate_id": 3, "name": "LVM"},
+            {"candidate_id": 4, "name": "GRUB"},
+            {"candidate_id": 5, "name": "AppArmor"},
+            {"candidate_id": 6, "name": "Btrfs"},
+            {"candidate_id": 7, "name": "NetworkManager"},
+            {"candidate_id": 8, "name": "PulseAudio"},
+            {"candidate_id": 9, "name": "systemd Timers"},
+            {"candidate_id": 10, "name": "UFW"}
+          ]
+        },
+        {
+          "party_id": 2,
+          "party_name": "Windows Party",
+          "candidates": [
+            {"candidate_id": 1, "name": "BitLocker"},
+            {"candidate_id": 2, "name": "WSL"},
+            {"candidate_id": 3, "name": "WinRM"},
+            {"candidate_id": 4, "name": "Event Viewer"},
+            {"candidate_id": 5, "name": "Task Scheduler"},
+            {"candidate_id": 6, "name": "Registry Editor"},
+            {"candidate_id": 7, "name": "Disk Management"},
+            {"candidate_id": 8, "name": "Windows Update"},
+            {"candidate_id": 9, "name": "Remote Desktop"},
+            {"candidate_id": 10, "name": "Control Panel"}
+          ]
+        },
+        {
+          "party_id": 3,
+          "party_name": "MacOS Alliance",
+          "candidates": [
+            {"candidate_id": 1, "name": "Keychain"},
+            {"candidate_id": 2, "name": "AirDrop"},
+            {"candidate_id": 3, "name": "Dock"},
+            {"candidate_id": 4, "name": "Spaces"},
+            {"candidate_id": 5, "name": "Siri"},
+            {"candidate_id": 6, "name": "FaceTime"},
+            {"candidate_id": 7, "name": "Quick Look"},
+            {"candidate_id": 8, "name": "Automator"},
+            {"candidate_id": 9, "name": "Launchpad"},
+            {"candidate_id": 10, "name": "Spotlight"}
+          ]
+        },
+        {
+          "party_id": 4,
+          "party_name": "BSD Front",
+          "candidates": [
+            {"candidate_id": 1, "name": "pkg_add"},
+            {"candidate_id": 2, "name": "rc.d Scripts"},
+            {"candidate_id": 3, "name": "OpenSSL"},
+            {"candidate_id": 4, "name": "PF Rules"},
+            {"candidate_id": 5, "name": "ZFS Snapshots"},
+            {"candidate_id": 6, "name": "Syslogd"},
+            {"candidate_id": 7, "name": "Mountd"},
+            {"candidate_id": 8, "name": "cron"},
+            {"candidate_id": 9, "name": "socket Programming"},
+            {"candidate_id": 10, "name": "DHCP Server"}
+          ]
+        },
+        {
+          "party_id": 5,
+          "party_name": "Unix Coalition",
+          "candidates": [
+            {"candidate_id": 1, "name": "grep"},
+            {"candidate_id": 2, "name": "awk"},
+            {"candidate_id": 3, "name": "sed"},
+            {"candidate_id": 4, "name": "sh"},
+            {"candidate_id": 5, "name": "vi"},
+            {"candidate_id": 6, "name": "make"},
+            {"candidate_id": 7, "name": "cron"},
+            {"candidate_id": 8, "name": "tar"},
+            {"candidate_id": 9, "name": "sendmail"},
+            {"candidate_id": 10, "name": "SysV Init"}
+          ]
+        }
+      ]
+    },
+    {
+      "district_id": "okr3",
+      "name": "Codetown",
+      "mandates": 7,
+      "parties": [
+        {
+          "party_id": 1,
+          "party_name": "Linux Party",
+          "candidates": [
+            {"candidate_id": 1, "name": "Ubuntu Server"},
+            {"candidate_id": 2, "name": "Debian Stable"},
+            {"candidate_id": 3, "name": "KDE Neon"},
+            {"candidate_id": 4, "name": "Gentoo"},
+            {"candidate_id": 5, "name": "Slackware"},
+            {"candidate_id": 6, "name": "Alpine"},
+            {"candidate_id": 7, "name": "Tails"},
+            {"candidate_id": 8, "name": "Raspberry Pi OS"},
+            {"candidate_id": 9, "name": "Clear Linux"},
+            {"candidate_id": 10, "name": "EndeavourOS"}
+          ]
+        },
+        {
+          "party_id": 2,
+          "party_name": "Windows Party",
+          "candidates": [
+            {"candidate_id": 1, "name": "Windows 10 LTSC"},
+            {"candidate_id": 2, "name": "Windows 11 Enterprise"},
+            {"candidate_id": 3, "name": "Server Core"},
+            {"candidate_id": 4, "name": "Hyper-V Containers"},
+            {"candidate_id": 5, "name": "WSL2"},
+            {"candidate_id": 6, "name": "PowerShell 7"},
+            {"candidate_id": 7, "name": "Remote Desktop Services"},
+            {"candidate_id": 8, "name": "Active Directory Domain Services"},
+            {"candidate_id": 9, "name": "Windows Sandbox"},
+            {"candidate_id": 10, "name": "BitLocker"}
+          ]
+        },
+        {
+          "party_id": 3,
+          "party_name": "MacOS Alliance",
+          "candidates": [
+            {"candidate_id": 1, "name": "Safari"},
+            {"candidate_id": 2, "name": "Finder"},
+            {"candidate_id": 3, "name": "Launchpad"},
+            {"candidate_id": 4, "name": "Spotlight"},
+            {"candidate_id": 5, "name": "AirPlay"},
+            {"candidate_id": 6, "name": "iCloud Keychain"},
+            {"candidate_id": 7, "name": "Sidecar"},
+            {"candidate_id": 8, "name": "Handoff"},
+            {"candidate_id": 9, "name": "Continuity Camera"},
+            {"candidate_id": 10, "name": "Automator"}
+          ]
+        },
+        {
+          "party_id": 4,
+          "party_name": "BSD Front",
+          "candidates": [
+            {"candidate_id": 1, "name": "FreeBSD Jail"},
+            {"candidate_id": 2, "name": "OpenBSD PF"},
+            {"candidate_id": 3, "name": "NetBSD Kernel"},
+            {"candidate_id": 4, "name": "ZFS Snapshot"},
+            {"candidate_id": 5, "name": "pkgsrc"},
+            {"candidate_id": 6, "name": "RC Scripts"},
+            {"candidate_id": 7, "name": "Sysctl Tuning"},
+            {"candidate_id": 8, "name": "Cron Jobs"},
+            {"candidate_id": 9, "name": "Socket API"},
+            {"candidate_id": 10, "name": "DHCP Server"}
+          ]
+        },
+        {
+          "party_id": 5,
+          "party_name": "Unix Coalition",
+          "candidates": [
+            {"candidate_id": 1, "name": "Vi Editor"},
+            {"candidate_id": 2, "name": "Sed Scripts"},
+            {"candidate_id": 3, "name": "Awk Programming"},
+            {"candidate_id": 4, "name": "Make Build"},
+            {"candidate_id": 5, "name": "Cron Jobs"},
+            {"candidate_id": 6, "name": "Tar Archiver"},
+            {"candidate_id": 7, "name": "Sendmail Config"},
+            {"candidate_id": 8, "name": "SysV Init"},
+            {"candidate_id": 9, "name": "Unix Shell"},
+            {"candidate_id": 10, "name": "File Permissions"}
+          ]
+        }
+      ]
+    },
+    {
+      "district_id": "okr4",
+      "name": "Devcity",
+      "mandates": 9,
+      "parties": [
+        {
+          "party_id": 1,
+          "party_name": "Linux Party",
+          "candidates": [
+            {"candidate_id": 1, "name": "Ubuntu Desktop"},
+            {"candidate_id": 2, "name": "Debian Testing"},
+            {"candidate_id": 3, "name": "Fedora Workstation"},
+            {"candidate_id": 4, "name": "Arch Linux"},
+            {"candidate_id": 5, "name": "Kali Linux"},
+            {"candidate_id": 6, "name": "Manjaro KDE"},
+            {"candidate_id": 7, "name": "Mint Cinnamon"},
+            {"candidate_id": 8, "name": "Elementary OS"},
+            {"candidate_id": 9, "name": "Pop!_OS"},
+            {"candidate_id": 10, "name": "OpenSUSE Tumbleweed"}
+          ]
+        },
+        {
+          "party_id": 2,
+          "party_name": "Windows Party",
+          "candidates": [
+            {"candidate_id": 1, "name": "Windows 10 Home"},
+            {"candidate_id": 2, "name": "Windows 11 Home"},
+            {"candidate_id": 3, "name": "Windows 10 Pro"},
+            {"candidate_id": 4, "name": "Windows 11 Pro"},
+            {"candidate_id": 5, "name": "Windows Server 2019"},
+            {"candidate_id": 6, "name": "Windows Server 2022"},
+            {"candidate_id": 7, "name": "WSL2"},
+            {"candidate_id": 8, "name": "Hyper-V"},
+            {"candidate_id": 9, "name": "PowerShell 7"},
+            {"candidate_id": 10, "name": "BitLocker"}
+          ]
+        },
+        {
+          "party_id": 3,
+          "party_name": "MacOS Alliance",
+          "candidates": [
+            {"candidate_id": 1, "name": "Monterey"},
+            {"candidate_id": 2, "name": "Ventura"},
+            {"candidate_id": 3, "name": "Big Sur"},
+            {"candidate_id": 4, "name": "Catalina"},
+            {"candidate_id": 5, "name": "Mojave"},
+            {"candidate_id": 6, "name": "High Sierra"},
+            {"candidate_id": 7, "name": "El Capitan"},
+            {"candidate_id": 8, "name": "Yosemite"},
+            {"candidate_id": 9, "name": "Sierra"},
+            {"candidate_id": 10, "name": "Snow Leopard"}
+          ]
+        },
+        {
+          "party_id": 4,
+          "party_name": "BSD Front",
+          "candidates": [
+            {"candidate_id": 1, "name": "FreeBSD 13"},
+            {"candidate_id": 2, "name": "OpenBSD 7.3"},
+            {"candidate_id": 3, "name": "NetBSD 9.3"},
+            {"candidate_id": 4, "name": "DragonFly BSD 6.2"},
+            {"candidate_id": 5, "name": "TrueOS"},
+            {"candidate_id": 6, "name": "GhostBSD"},
+            {"candidate_id": 7, "name": "PC-BSD"},
+            {"candidate_id": 8, "name": "LEAF BSD"},
+            {"candidate_id": 9, "name": "MirBSD"},
+            {"candidate_id": 10, "name": "kFreeBSD"}
+          ]
+        },
+        {
+          "party_id": 5,
+          "party_name": "Unix Coalition",
+          "candidates": [
+            {"candidate_id": 1, "name": "Solaris"},
+            {"candidate_id": 2, "name": "AIX"},
+            {"candidate_id": 3, "name": "HP-UX"},
+            {"candidate_id": 4, "name": "IRIX"},
+            {"candidate_id": 5, "name": "Tru64"},
+            {"candidate_id": 6, "name": "OpenServer"},
+            {"candidate_id": 7, "name": "Minix"},
+            {"candidate_id": 8, "name": "Xenix"},
+            {"candidate_id": 9, "name": "UNIX System V"},
+            {"candidate_id": 10, "name": "BSD/OS"}
+          ]
+        }
+      ]
+    }
+  ]
+}

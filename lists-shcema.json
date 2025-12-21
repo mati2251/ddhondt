@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "D'Hondta Election",
+  "type": "object",
+  "required": ["election_id", "districts"],
+  "properties": {
+    "election_id": {
+      "type": "string"
+    },
+    "districts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["district_id", "name", "mandates", "parties"],
+        "properties": {
+          "district_id": {"type": "string"},
+          "name": {"type": "string"},
+          "mandates": {"type": "integer", "minimum": 1},
+          "parties": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["party_id", "party_name", "candidates"],
+              "properties": {
+                "party_id": {"type": "integer", "minimum": 1},
+                "party_name": {"type": "string"},
+                "candidates": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["candidate_id", "name"],
+                    "properties": {
+                      "candidate_id": {"type": "integer", "minimum": 1},
+                      "name": {"type": "string"}
+                    }
+                  },
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
