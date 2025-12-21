@@ -1,0 +1,22 @@
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra-dev
+    environment:
+      - CASSANDRA_CLUSTER_NAME=DevCluster
+      - CASSANDRA_DC=DC1
+      - CASSANDRA_RACK=RAC1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    networks:
+      - cassandra-net
+    restart: unless-stopped
+
+volumes:
+  cassandra-data:
+
+networks:
+  cassandra-net:
