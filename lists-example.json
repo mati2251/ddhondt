@@ -2,7 +2,7 @@
   "election_id": "os_sejm2025",
   "districts": [
     {
-      "district_id": "okr1",
+      "district_id": 1,
       "name": "Techopolis",
       "mandates": 10,
       "parties": [
@@ -89,7 +89,7 @@
       ]
     },
     {
-      "district_id": "okr2",
+      "district_id": 2,
       "name": "Geekville",
       "mandates": 8,
       "parties": [
@@ -176,7 +176,7 @@
       ]
     },
     {
-      "district_id": "okr3",
+      "district_id": 3,
       "name": "Codetown",
       "mandates": 7,
       "parties": [
@@ -263,7 +263,7 @@
       ]
     },
     {
-      "district_id": "okr4",
+      "district_id": 4,
       "name": "Devcity",
       "mandates": 9,
       "parties": [

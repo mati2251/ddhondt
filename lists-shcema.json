@@ -13,7 +13,7 @@
         "type": "object",
         "required": ["district_id", "name", "mandates", "parties"],
         "properties": {
-          "district_id": {"type": "string"},
+          "district_id": {"type": "integer"},
           "name": {"type": "string"},
           "mandates": {"type": "integer", "minimum": 1},
           "parties": {
