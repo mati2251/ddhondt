@@ -5,7 +5,7 @@ WITH replication = {
 };
 
 CREATE TABLE elections.votes (
-    district_id text,
+    district_id int,
     party_id int,
     candidate_id int,
     votes counter,
