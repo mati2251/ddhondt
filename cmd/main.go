@@ -10,7 +10,14 @@ import (
 	gocql "github.com/apache/cassandra-gocql-driver/v2"
 )
 
-var voteQuery *gocql.Query
+const (
+	voteThreshold = 5
+)
+
+var (
+	voteQuery   *gocql.Query
+	resultQuery *gocql.Query
+)
 
 type Candidate struct {
 	CandidateID int    `json:"candidate_id"`
@@ -70,13 +77,47 @@ func parseArgToItem[T Identifiable](arg string, items []T) (T, int, bool) {
 }
 
 func initCassandraSession() (*gocql.Session, error) {
-	cluster := gocql.NewCluster("172.28.0.10","172.28.0.11","172.28.0.12","172.28.0.13")
+	cluster := gocql.NewCluster("172.28.0.10", "172.28.0.11", "172.28.0.12", "172.28.0.13")
 	cluster.Keyspace = "elections"
 	return cluster.CreateSession()
 }
 
-func vote(districtID string, partyID int, candidateID int) error {
-	err := voteQuery.Bind(districtID, partyID, candidateID).Exec()
+func vote(election Election) error {
+	if flag.NArg() < 5 {
+		return fmt.Errorf("not enough arguments for voting")
+	}
+
+	district, districtID, ok := parseArgToItem(flag.Arg(2), election.Districts)
+	if !ok {
+		fmt.Printf("Invalid district: %s\n", flag.Arg(2))
+		os.Exit(1)
+	}
+
+	party, partyID, ok := parseArgToItem(flag.Arg(3), district.Parties)
+	if !ok {
+		fmt.Printf("Invalid party: %s\n", flag.Arg(3))
+		os.Exit(1)
+	}
+	candidate, candidateID, ok := parseArgToItem(flag.Arg(4), party.Candidates)
+	if !ok {
+		fmt.Printf("Invalid candidate: %s\n", flag.Arg(4))
+		os.Exit(1)
+	}
+
+	fmt.Printf("Voting for candidate %s (ID: %d) from party %s (ID: %d) in district %s (ID: %d)\n",
+		candidate.Name, candidateID, party.PartyName, partyID, district.Name, districtID)
+
+	session, err := initCassandraSession()
+	if err != nil {
+		fmt.Printf("Failed to connect to Cassandra: %v\n", err)
+		os.Exit(1)
+	}
+
+	defer session.Close()
+
+	initQuery(session)
+
+	err = voteQuery.Bind(districtID, partyID, candidateID).Exec()
 	if err != nil {
 		return fmt.Errorf("failed to execute vote query: %w", err)
 	}
@@ -84,24 +125,27 @@ func vote(districtID string, partyID int, candidateID int) error {
 	return nil
 }
 
-func initialQuery(session *gocql.Session) {
+func initQuery(session *gocql.Session) {
 	voteQuery = session.Query(`UPDATE votes SET votes = votes + 1 WHERE district_id = ? AND party_id = ? AND candidate_id = ?`)
+	resultQuery = session.Query(`SELECT district_id, party_id, candidate_id, votes FROM votes WHERE district_id = ?`)
 }
 
 func main() {
-	filePath := flag.String("f", "", "Path to election lists json file")
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [options] <district id|string> <party id|string> <candidate id|string>\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s <election file> <cmd>\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Commands:\n")
+		fmt.Fprintf(os.Stderr, "  vote <district> <party> <candidate>   Cast a vote\n")
 		flag.PrintDefaults()
 	}
 	flag.Parse()
+	filePath := flag.Arg(0)
 
-	if *filePath == "" || flag.NArg() != 3 {
+	if filePath == "" || flag.NArg() < 3 {
 		flag.Usage()
 		os.Exit(1)
 	}
 
-	data, err := os.ReadFile(*filePath)
+	data, err := os.ReadFile(filePath)
 	if err != nil {
 		fmt.Printf("Error reading file: %v\n", err)
 		os.Exit(1)
@@ -130,40 +174,14 @@ func main() {
 		}
 	}
 
-	district, districtID, ok := parseArgToItem(flag.Arg(0), election.Districts)
-	if !ok {
-		fmt.Printf("Invalid district: %s\n", flag.Arg(0))
-		os.Exit(1)
+	cmd := flag.Arg(1)
+	switch cmd {
+	case "vote":
+		if err := vote(election); err != nil {
+			fmt.Printf("Error voting: %v\n", err)
+			os.Exit(1)
+		}
+	default:
+		flag.Usage()
 	}
-
-	party, partyID, ok := parseArgToItem(flag.Arg(1), district.Parties)
-	if !ok {
-		fmt.Printf("Invalid party: %s\n", flag.Arg(1))
-		os.Exit(1)
-	}
-	candidate, candidateID, ok := parseArgToItem(flag.Arg(2), party.Candidates)
-	if !ok {
-		fmt.Printf("Invalid candidate: %s\n", flag.Arg(2))
-		os.Exit(1)
-	}
-
-	fmt.Printf("Voting for candidate %s (ID: %d) from party %s (ID: %d) in district %s (ID: %d)\n",
-		candidate.Name, candidateID, party.PartyName, partyID, district.Name, districtID)
-	
-	session, err := initCassandraSession()
-	if err != nil {
-		fmt.Printf("Failed to connect to Cassandra: %v\n", err)
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
-	initialQuery(session)
-
-	if err := vote(strconv.Itoa(districtID), partyID, candidateID); err != nil {
-		fmt.Printf("Failed to cast vote: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println("Vote cast successfully")
 }
