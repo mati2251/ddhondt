@@ -1,22 +1,89 @@
 services:
-  cassandra:
-    image: cassandra:latest
-    container_name: cassandra-dev
+  cassandra-0:
+    build: cassandra/.
+    container_name: cassandra-0
+    networks:
+      net:
+        ipv4_address: 172.28.0.10
     environment:
       - CASSANDRA_CLUSTER_NAME=DevCluster
       - CASSANDRA_DC=DC1
-      - CASSANDRA_RACK=RAC1
+      - CASSANDRA_RACK=RACK1
       - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
-    ports:
-      - "9042:9042"
+      - CASSANDRA_SEEDS=172.28.0.10
+      - CASSANDRA_HEAP_SIZE=512M
+      - CASSANDRA_MAX_HEAP_SIZE=512M
+      - CASSANDRA_HEAP_NEWSIZE=100M
     volumes:
-      - cassandra-data:/var/lib/cassandra
-    networks:
-      - cassandra-net
+      - cassandra-data-0:/var/lib/cassandra
     restart: unless-stopped
 
-volumes:
-  cassandra-data:
+  cassandra-1:
+    build: cassandra/.
+    container_name: cassandra-1
+    networks:
+      net:
+        ipv4_address: 172.28.0.11
+    environment:
+      - CASSANDRA_CLUSTER_NAME=DevCluster
+      - CASSANDRA_DC=DC1
+      - CASSANDRA_RACK=RACK1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=172.28.0.10
+      - CASSANDRA_HEAP_SIZE=512M
+      - CASSANDRA_MAX_HEAP_SIZE=512M
+      - CASSANDRA_HEAP_NEWSIZE=100M
+    volumes:
+      - cassandra-data-1:/var/lib/cassandra
+    depends_on:
+      - cassandra-0
+    restart: unless-stopped
+
+  cassandra-2:
+    build: cassandra/.
+    container_name: cassandra-2
+    networks:
+      net:
+        ipv4_address: 172.28.0.12
+    environment:
+      - CASSANDRA_CLUSTER_NAME=DevCluster
+      - CASSANDRA_DC=DC1
+      - CASSANDRA_RACK=RACK2
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=172.28.0.10
+    volumes:
+      - cassandra-data-2:/var/lib/cassandra
+    depends_on:
+      - cassandra-0
+    restart: unless-stopped
+
+  cassandra-3:
+    build: cassandra/.
+    container_name: cassandra-3
+    networks:
+      net:
+        ipv4_address: 172.28.0.13
+    environment:
+      - CASSANDRA_CLUSTER_NAME=DevCluster
+      - CASSANDRA_DC=DC1
+      - CASSANDRA_RACK=RACK2
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+      - CASSANDRA_SEEDS=172.28.0.10
+    volumes:
+      - cassandra-data-3:/var/lib/cassandra
+    depends_on:
+      - cassandra-0
+    restart: unless-stopped
 
 networks:
-  cassandra-net:
+  net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+volumes:
+  cassandra-data-0:
+  cassandra-data-1:
+  cassandra-data-2:
+  cassandra-data-3:

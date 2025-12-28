@@ -70,7 +70,7 @@ func parseArgToItem[T Identifiable](arg string, items []T) (T, int, bool) {
 }
 
 func initCassandraSession() (*gocql.Session, error) {
-	cluster := gocql.NewCluster("127.0.0.1")
+	cluster := gocql.NewCluster("172.28.0.10","172.28.0.11","172.28.0.12","172.28.0.13")
 	cluster.Keyspace = "elections"
 	return cluster.CreateSession()
 }
@@ -85,7 +85,7 @@ func vote(districtID string, partyID int, candidateID int) error {
 }
 
 func initialQuery(session *gocql.Session) {
-	voteQuery = session.Query(`UPDATE votes SET vote_count = vote_count + 1 WHERE district_id = ? AND party_id = ? AND candidate_id = ?`)
+	voteQuery = session.Query(`UPDATE votes SET votes = votes + 1 WHERE district_id = ? AND party_id = ? AND candidate_id = ?`)
 }
 
 func main() {
@@ -119,12 +119,12 @@ func main() {
 
 	for _, d := range election.Districts {
 		if len(d.Parties) == 0 {
-			fmt.Printf("Validation error: district %s has no parties\n", d.DistrictID)
+			fmt.Printf("Validation error: district %d has no parties\n", d.DistrictID)
 			os.Exit(1)
 		}
 		for _, p := range d.Parties {
 			if len(p.Candidates) == 0 {
-				fmt.Printf("Validation error: party %s in district %s has no candidates\n", p.PartyName, d.DistrictID)
+				fmt.Printf("Validation error: party %s in district %d has no candidates\n", p.PartyName, d.DistrictID)
 				os.Exit(1)
 			}
 		}
@@ -149,4 +149,21 @@ func main() {
 
 	fmt.Printf("Voting for candidate %s (ID: %d) from party %s (ID: %d) in district %s (ID: %d)\n",
 		candidate.Name, candidateID, party.PartyName, partyID, district.Name, districtID)
+	
+	session, err := initCassandraSession()
+	if err != nil {
+		fmt.Printf("Failed to connect to Cassandra: %v\n", err)
+		os.Exit(1)
+	}
+
+	defer session.Close()
+
+	initialQuery(session)
+
+	if err := vote(strconv.Itoa(districtID), partyID, candidateID); err != nil {
+		fmt.Printf("Failed to cast vote: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("Vote cast successfully")
 }
