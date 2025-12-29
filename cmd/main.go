@@ -4,14 +4,18 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"math/rand"
 	"os"
 	"strconv"
+	"sync"
+	"time"
 
 	gocql "github.com/apache/cassandra-gocql-driver/v2"
 )
 
 const (
 	voteThreshold = 5
+	workers       = 10
 )
 
 var (
@@ -117,12 +121,101 @@ func vote(election Election) error {
 
 	initQuery(session)
 
-	err = voteQuery.Bind(districtID, partyID, candidateID).Exec()
+	err = castVote(districtID, partyID, candidateID)
+	if err != nil {
+		return fmt.Errorf("failed to cast vote: %w", err)
+	}
+
+	return nil
+}
+
+func castVote(districtID, partyID, candidateID int) error {
+	err := voteQuery.Bind(districtID, partyID, candidateID).Exec()
 	if err != nil {
 		return fmt.Errorf("failed to execute vote query: %w", err)
 	}
 	// TODO: check network partition fault here
 	return nil
+}
+
+func voteLoad(election Election) error {
+
+	if flag.NArg() < 4 {
+		return fmt.Errorf("not enough arguments for vote load")
+	}
+
+	timeArg := flag.Arg(2)
+	votesArg := flag.Arg(3)
+
+	durationSeconds, err := strconv.Atoi(timeArg)
+	if err != nil {
+		return fmt.Errorf("invalid duration: %w", err)
+	}
+
+	votesCount, err := strconv.Atoi(votesArg)
+	if err != nil {
+		return fmt.Errorf("invalid votes count: %w", err)
+	}
+
+	if durationSeconds <= 0 || votesCount <= 0 {
+		return fmt.Errorf("duration and votes count must be positive integers")
+	}
+
+	session, err := initCassandraSession()
+	if err != nil {
+		return fmt.Errorf("failed to connect to Cassandra: %w", err)
+	}
+	defer session.Close()
+
+	initQuery(session)
+
+	votesChan := make(chan struct{})
+
+	wg := sync.WaitGroup{}
+
+	for range workers {
+		go heavyVoter(election, votesChan, &wg)
+	}
+
+	interval := time.Duration(durationSeconds) * time.Second / time.Duration(votesCount)
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+	voutesCount := 0
+	for range votesCount {
+		<-ticker.C
+		voutesCount += 1
+		votesChan <- struct{}{}
+	}
+
+	fmt.Printf("Submitted %d votes in %d seconds\n", voutesCount, durationSeconds)
+	close(votesChan)
+	wg.Wait()
+	return nil
+}
+
+func heavyVoter(election Election, votesChan <-chan struct{}, wg *sync.WaitGroup) {
+	wg.Add(1)
+	source := rand.NewSource(time.Now().UnixNano())
+	rng := rand.New(source)
+
+	for range votesChan {
+		d := election.Districts[rng.Intn(len(election.Districts))]
+		p := d.Parties[rng.Intn(len(d.Parties))]
+		c := p.Candidates[rng.Intn(len(p.Candidates))]
+
+		err := voteQuery.Bind(
+			d.DistrictID,
+			p.PartyID,
+			c.CandidateID,
+		).Exec()
+
+		if err != nil {
+			fmt.Printf("vote failed (district=%d party=%d candidate=%d): %v\n",
+				d.DistrictID, p.PartyID, c.CandidateID, err)
+			break
+		}
+	}
+	wg.Done()
 }
 
 func initQuery(session *gocql.Session) {
@@ -134,7 +227,8 @@ func main() {
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s <election file> <cmd>\n", os.Args[0])
 		fmt.Fprintf(os.Stderr, "Commands:\n")
-		fmt.Fprintf(os.Stderr, "  vote <district> <party> <candidate>   Cast a vote\n")
+		fmt.Fprintf(os.Stderr, "  vote <district> <party> <candidate>   	Cast a vote\n")
+		fmt.Fprintf(os.Stderr, "  vote-load <time in seconds> <votes count> 	Generate vote load\n")
 		flag.PrintDefaults()
 	}
 	flag.Parse()
@@ -179,6 +273,11 @@ func main() {
 	case "vote":
 		if err := vote(election); err != nil {
 			fmt.Printf("Error voting: %v\n", err)
+			os.Exit(1)
+		}
+	case "vote-load":
+		if err := voteLoad(election); err != nil {
+			fmt.Printf("Error generating vote load: %v\n", err)
 			os.Exit(1)
 		}
 	default:
