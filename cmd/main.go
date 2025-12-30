@@ -21,6 +21,7 @@ const (
 var (
 	voteQuery   *gocql.Query
 	resultQuery *gocql.Query
+	clearQuery  *gocql.Query
 )
 
 type Candidate struct {
@@ -111,17 +112,7 @@ func vote(election Election) error {
 	fmt.Printf("Voting for candidate %s (ID: %d) from party %s (ID: %d) in district %s (ID: %d)\n",
 		candidate.Name, candidateID, party.PartyName, partyID, district.Name, districtID)
 
-	session, err := initCassandraSession()
-	if err != nil {
-		fmt.Printf("Failed to connect to Cassandra: %v\n", err)
-		os.Exit(1)
-	}
-
-	defer session.Close()
-
-	initQuery(session)
-
-	err = castVote(districtID, partyID, candidateID)
+	err := castVote(districtID, partyID, candidateID)
 	if err != nil {
 		return fmt.Errorf("failed to cast vote: %w", err)
 	}
@@ -130,7 +121,7 @@ func vote(election Election) error {
 }
 
 func castVote(districtID, partyID, candidateID int) error {
-	err := voteQuery.Bind(districtID, partyID, candidateID).Exec()
+	err := voteQuery.Bind(districtID, partyID, candidateID).Consistency(gocql.Three).Exec()
 	if err != nil {
 		return fmt.Errorf("failed to execute vote query: %w", err)
 	}
@@ -160,14 +151,6 @@ func voteLoad(election Election) error {
 	if durationSeconds <= 0 || votesCount <= 0 {
 		return fmt.Errorf("duration and votes count must be positive integers")
 	}
-
-	session, err := initCassandraSession()
-	if err != nil {
-		return fmt.Errorf("failed to connect to Cassandra: %w", err)
-	}
-	defer session.Close()
-
-	initQuery(session)
 
 	votesChan := make(chan struct{})
 
@@ -218,9 +201,14 @@ func heavyVoter(election Election, votesChan <-chan struct{}, wg *sync.WaitGroup
 	wg.Done()
 }
 
+func clearVotes() error {
+	return clearQuery.Exec()
+}
+
 func initQuery(session *gocql.Session) {
 	voteQuery = session.Query(`UPDATE votes SET votes = votes + 1 WHERE district_id = ? AND party_id = ? AND candidate_id = ?`)
 	resultQuery = session.Query(`SELECT district_id, party_id, candidate_id, votes FROM votes WHERE district_id = ?`)
+	clearQuery = session.Query(`TRUNCATE votes`).Consistency(gocql.All)
 }
 
 func main() {
@@ -234,7 +222,7 @@ func main() {
 	flag.Parse()
 	filePath := flag.Arg(0)
 
-	if filePath == "" || flag.NArg() < 3 {
+	if filePath == "" || flag.NArg() < 2 {
 		flag.Usage()
 		os.Exit(1)
 	}
@@ -268,6 +256,17 @@ func main() {
 		}
 	}
 
+	session, err := initCassandraSession()
+	if err != nil {
+		fmt.Printf("Failed to connect to Cassandra: %v\n", err)
+		os.Exit(1)
+	}
+
+	defer session.Close()
+
+	initQuery(session)
+
+
 	cmd := flag.Arg(1)
 	switch cmd {
 	case "vote":
@@ -279,6 +278,10 @@ func main() {
 		if err := voteLoad(election); err != nil {
 			fmt.Printf("Error generating vote load: %v\n", err)
 			os.Exit(1)
+		}
+	case "clear":
+		if err := clearVotes(); err != nil {
+			fmt.Printf("Error clearing votes: %v\n", err)
 		}
 	default:
 		flag.Usage()
