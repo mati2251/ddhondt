@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "D'Hondta Election",
+  "title": "D'Hondta Election Map",
   "type": "object",
-  "required": ["election_id", "districts"],
+  "required": ["election_id", "districts", "parties", "candidates"],
   "properties": {
     "election_id": {
       "type": "string"
@@ -11,32 +11,42 @@
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["district_id", "name", "mandates", "parties"],
+        "required": ["district_id", "name", "mandates"],
         "properties": {
-          "district_id": {"type": "integer"},
+          "district_id": {"type": "integer", "minimum": 1},
           "name": {"type": "string"},
-          "mandates": {"type": "integer", "minimum": 1},
-          "parties": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["party_id", "party_name", "candidates"],
-              "properties": {
-                "party_id": {"type": "integer", "minimum": 1},
-                "party_name": {"type": "string"},
-                "candidates": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "required": ["candidate_id", "name"],
-                    "properties": {
-                      "candidate_id": {"type": "integer", "minimum": 1},
-                      "name": {"type": "string"}
-                    }
-                  },
-                  "minItems": 1
+          "mandates": {"type": "integer", "minimum": 1}
+        }
+      }
+    },
+    "parties": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["party_id", "party_name"],
+        "properties": {
+          "party_id": {"type": "integer", "minimum": 1},
+          "party_name": {"type": "string"}
+        }
+      }
+    },
+    "candidates": {
+      "type": "object",
+      "patternProperties": {
+        "^[0-9]+$": { 
+          "type": "object",
+          "patternProperties": {
+            "^[0-9]+$": { 
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["candidate_id", "name"],
+                "properties": {
+                  "candidate_id": {"type": "integer", "minimum": 1},
+                  "name": {"type": "string"}
                 }
-              }
+              },
+              "minItems": 1
             }
           }
         }
